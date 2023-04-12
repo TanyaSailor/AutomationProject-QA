@@ -4,7 +4,7 @@ services:
     image: mysql:latest
     restart: always
     ports:
-      - '3306:3306'
+      - '185.119.57.47:3306'
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=app
@@ -18,9 +18,9 @@ services:
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=pass
     ports:
-      - '5432:5432'
+      - '185.119.57.47:5432'
   node-app:
     build: ./gate-simulator
     image: node-app:18.5.0
     ports:
-      - '9999:9999'
+      - '185.119.57.47:9999'
