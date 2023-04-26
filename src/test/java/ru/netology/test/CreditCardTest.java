@@ -7,9 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.data.DataHelper;
+import ru.netology.data.SQLData;
 import ru.netology.pages.HomePage;
 
 import static com.codeborne.selenide.Selenide.open;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreditCardTest {
     @BeforeAll
@@ -27,6 +29,10 @@ public class CreditCardTest {
         open("http://localhost:8080");
     }
 
+    @BeforeEach
+    void clearDataBase() {
+        SQLData.cleanDataBase();
+    }
 
     @Test
     public void shouldSuccessfulPayment(){
@@ -34,7 +40,8 @@ public class CreditCardTest {
         var payByCreditCard = homePage.payByCreditCard();
         payByCreditCard.fillPaymentForm(DataHelper.getValidPaymentForm());
         payByCreditCard.successfulPayment();
-        // дописать проверку статуса в бд
+        var paymentStatus = SQLData.getStatusCreditCard();
+        assertEquals("APPROVED", paymentStatus);
     }
 
     @Test
@@ -43,7 +50,8 @@ public class CreditCardTest {
         var payByCreditCard = homePage.payByCreditCard();
         payByCreditCard.fillPaymentForm(DataHelper.getFormWithInvalidCard());
         payByCreditCard.bankRefused();
-        // дописать проверку статуса в бд
+        var paymentStatus = SQLData.getStatusCreditCard();
+        assertEquals("DECLINED", paymentStatus);
     }
 
     @Test

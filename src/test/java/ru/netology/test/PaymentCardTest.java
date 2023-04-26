@@ -30,6 +30,10 @@ public class PaymentCardTest {
         open("http://localhost:8080");
     }
 
+    @BeforeEach
+    void clearDataBase() {
+        SQLData.cleanDataBase();
+    }
 
     @Test
     public void shouldSuccessfulPayment(){
@@ -37,7 +41,8 @@ public class PaymentCardTest {
         var payByCard = homePage.payByCard();
         payByCard.fillPaymentForm(DataHelper.getValidPaymentForm());
         payByCard.successfulPayment();
-        // дописать проверку статуса в бд
+        var paymentStatus = SQLData.getStatusPaymentCard();
+        assertEquals("APPROVED", paymentStatus);
     }
 
     @Test
@@ -46,7 +51,10 @@ public class PaymentCardTest {
         var payByCard = homePage.payByCard();
         payByCard.fillPaymentForm(DataHelper.getFormWithInvalidCard());
         payByCard.bankRefused();
-        // дописать проверку статуса в бд
+        var paymentStatus = SQLData.getStatusPaymentCard();
+        assertEquals("DECLINED", paymentStatus);
+
+
     }
 
     @Test
